@@ -116,9 +116,9 @@ const LoginPage = () => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <button type="button" className="font-medium text-blue-600 hover:text-blue-500">
                 Forgot password?
-              </a>
+              </button>
             </div>
           </div>
 
@@ -134,9 +134,9 @@ const LoginPage = () => {
           <div className="text-center">
             <span className="text-sm text-gray-600">
               Don't have an account?
-              <a href="#" className="ml-1 text-blue-600 hover:text-blue-500">
+              <button type="button" className="ml-1 text-blue-600 hover:text-blue-500">
                 Register
-              </a>
+              </button>
             </span>
           </div>
         </form>

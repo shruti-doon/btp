@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/common/Button';
 import cropdarpanLogo from '../assets/images/cropdarpan_logo.png';
 import { fetchCrops } from '../api/cropService'; 
-
-const crop = [[
-  { cid: 1, name: 'Cotton', imageUrl: [] },
-  { cid: 2, name: 'Paddy', imageUrl: [] }
-]];
 
 const HomePage = () => {
   const [crops, setCrops] = useState([]);

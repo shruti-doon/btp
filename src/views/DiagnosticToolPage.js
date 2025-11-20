@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Button from '../components/common/Button';
-import useCropData from '../hooks/useCropData';
-import { getDiagnosis } from '../api/cropService';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDiseases } from '../api/cropService';
 
 const DiagnosticToolPage = () => {
@@ -10,7 +7,7 @@ const DiagnosticToolPage = () => {
   const navigate = useNavigate();
 
   const [issues, setIssues] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true); // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     const loadDiseases = async () => {
@@ -19,8 +16,6 @@ const DiagnosticToolPage = () => {
         setIssues(data);
       } catch (error) {
         console.error('Failed to fetch diseases:', error);
-      } finally {
-        setLoading(false);
       }
     };
 

@@ -68,14 +68,6 @@ pipeline {
                     npm test -- --watchAll=false --coverage || true
                 '''
             }
-            post {
-                always {
-                    publishTestResults testResultsPattern: '**/test-results.xml'
-                    publishCoverageReports([
-                        coberturaReport('coverage/cobertura-coverage.xml')
-                    ])
-                }
-            }
         }
         
         stage('Build Application') {

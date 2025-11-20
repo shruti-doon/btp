@@ -6,9 +6,6 @@ import axios from './axiosInstance';
 // This service would normally make API calls to a backend
 // But for this example, we'll use the controller directly
 
-
-const USE_MOCK = false;
-
 export async function fetchCrops() {
   const response = await axios.get('/crops');
   return response.data;
