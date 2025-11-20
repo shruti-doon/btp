@@ -89,7 +89,7 @@ pipeline {
                 echo '🐳 Building Docker image...'
                 script {
                     def dockerImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                    dockerImage.tag("${DOCKER_IMAGE}:latest")
+                    dockerImage.tag("latest")
                 }
             }
         }
