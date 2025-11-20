@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cropdarpan-frontend-deployment
+spec:
+  replicas: 3 # You can change this to the number of pods you want
+  selector:
+    matchLabels:
+      app: cropdarpan-frontend
+  template:
+    metadata:
+      labels:
+        app: cropdarpan-frontend
+    spec:
+      containers:
+      - name: cropdarpan-frontend-container
+        image: sddoon/cropdarpan-frontend:latest
+        ports:
+        - containerPort: 80 # Change this to the port your application listens on
