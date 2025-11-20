@@ -128,16 +128,44 @@ pipeline {
                         sh '''
                             export KUBECONFIG=${KUBECONFIG}
                             
-                            # Update deployment with new image
-                            kubectl set image deployment/cropdarpan-frontend-deployment \
-                                cropdarpan-frontend-container=${DOCKER_IMAGE}:${DOCKER_TAG} \
-                                -n default || kubectl apply -f k8s/
+                            # Verify kubectl is available
+                            kubectl version --client || { echo "kubectl not found!"; exit 1; }
+                            
+                            # Check if namespace exists, create if not
+                            if ! kubectl get namespace cropdarpan &>/dev/null; then
+                                echo "Creating namespace cropdarpan..."
+                                kubectl create namespace cropdarpan || true
+                            fi
+                            
+                            # Update the deployment YAML with the new image tag
+                            sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g" k8s/deployment.yaml
+                            
+                            # Apply all Kubernetes manifests
+                            echo "Applying Kubernetes manifests..."
+                            kubectl apply -f k8s/namespace.yaml
+                            kubectl apply -f k8s/deployment.yaml
+                            kubectl apply -f k8s/service.yaml
+                            
+                            # Update deployment with new image (alternative method if apply doesn't update)
+                            kubectl set image deployment/cropdarpan-frontend \
+                                cropdarpan-frontend=${DOCKER_IMAGE}:${DOCKER_TAG} \
+                                -n cropdarpan || true
                             
                             # Wait for rollout to complete
-                            kubectl rollout status deployment/cropdarpan-frontend-deployment -n default --timeout=300s
+                            echo "Waiting for deployment rollout..."
+                            kubectl rollout status deployment/cropdarpan-frontend -n cropdarpan --timeout=300s
                             
                             # Verify deployment
-                            kubectl get pods -l app=cropdarpan-frontend -n default
+                            echo "Deployment status:"
+                            kubectl get deployment cropdarpan-frontend -n cropdarpan
+                            
+                            echo "Pod status:"
+                            kubectl get pods -l app=cropdarpan-frontend -n cropdarpan
+                            
+                            echo "Service status:"
+                            kubectl get service cropdarpan-frontend-service -n cropdarpan
+                            
+                            echo "✅ Deployment completed successfully!"
                         '''
                     }
                 }
