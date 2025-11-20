@@ -131,7 +131,21 @@ pipeline {
                             export KUBECONFIG=${KUBECONFIG}
                             
                             # Verify kubectl is available
-                            kubectl version --client || { echo "kubectl not found!"; exit 1; }
+                            kubectl version --client || { echo "❌ kubectl not found!"; exit 1; }
+                            
+                            # Check if cluster is accessible
+                            echo "Checking cluster connectivity..."
+                            if ! kubectl cluster-info &>/dev/null; then
+                                echo "❌ Error: Cannot connect to Kubernetes cluster"
+                                echo "Please ensure:"
+                                echo "  1. Minikube is running: minikube start"
+                                echo "  2. Cluster is accessible from Jenkins server"
+                                echo "  3. Network connectivity is working"
+                                exit 1
+                            fi
+                            
+                            echo "✅ Cluster is accessible"
+                            kubectl cluster-info
                             
                             # Check if namespace exists, create if not
                             if ! kubectl get namespace cropdarpan &>/dev/null; then
