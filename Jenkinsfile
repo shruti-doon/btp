@@ -133,19 +133,39 @@ pipeline {
                             # Verify kubectl is available
                             kubectl version --client || { echo "❌ kubectl not found!"; exit 1; }
                             
+                            # Show kubeconfig info (without sensitive data)
+                            echo "📋 Kubeconfig file: ${KUBECONFIG}"
+                            echo "📋 Current context:"
+                            kubectl config current-context || echo "⚠️ No current context set"
+                            echo "📋 Available contexts:"
+                            kubectl config get-contexts || echo "⚠️ Could not list contexts"
+                            
                             # Check if cluster is accessible
-                            echo "Checking cluster connectivity..."
-                            if ! kubectl cluster-info &>/dev/null; then
+                            echo "🔍 Checking cluster connectivity..."
+                            echo "Running: kubectl cluster-info"
+                            if ! kubectl cluster-info 2>&1; then
+                                echo ""
                                 echo "❌ Error: Cannot connect to Kubernetes cluster"
+                                echo ""
+                                echo "Diagnostics:"
+                                echo "  - Kubeconfig path: ${KUBECONFIG}"
+                                echo "  - Current context: $(kubectl config current-context 2>&1 || echo 'N/A')"
+                                echo ""
                                 echo "Please ensure:"
-                                echo "  1. Minikube is running: minikube start"
-                                echo "  2. Cluster is accessible from Jenkins server"
-                                echo "  3. Network connectivity is working"
+                                echo "  1. The cluster is running and accessible"
+                                echo "  2. The kubeconfig file is valid and points to the correct cluster"
+                                echo "  3. If using Minikube: minikube start (on the cluster host)"
+                                echo "  4. If using remote cluster: network connectivity is working"
+                                echo "  5. The kubeconfig server URL is reachable from Jenkins"
+                                echo ""
+                                echo "To debug further, check:"
+                                echo "  - kubectl config view (to see configuration)"
+                                echo "  - Network connectivity to the cluster API server"
                                 exit 1
                             fi
                             
+                            echo ""
                             echo "✅ Cluster is accessible"
-                            kubectl cluster-info
                             
                             # Check if namespace exists, create if not
                             if ! kubectl get namespace cropdarpan &>/dev/null; then
