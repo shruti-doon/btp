@@ -114,16 +114,18 @@ pipeline {
         }
         
         stage('Deploy to Kubernetes') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'master'
-                    branch 'web-migration-btp-25'
-                }
-            }
             steps {
                 echo '🚀 Deploying to Kubernetes...'
                 script {
+                    // Get the actual branch name from git for logging
+                    def gitBranch = sh(
+                        script: 'git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown"',
+                        returnStdout: true
+                    ).trim()
+                    
+                    echo "Deploying from branch: ${gitBranch}"
+                    echo "Build number: ${env.BUILD_NUMBER}"
+                    
                     withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
                         sh '''
                             export KUBECONFIG=${KUBECONFIG}
