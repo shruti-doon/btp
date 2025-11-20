@@ -62,7 +62,7 @@ const HomePage = () => {
           </div>
           
           {/* Title and Description */}
-          <h1 className="text-xl font-bold text-blue-800 mb-1">HELLLOOOOOOO????????</h1>
+          <h1 className="text-xl font-bold text-blue-800 mb-1">A Crop Diagnostic Tool</h1>
           <div className="text-center mb-8 text-blue-600 text-sm">
             <p>IIIT Hyderabad and Professor</p>
             <p>Jayashankar Telangana State</p>
